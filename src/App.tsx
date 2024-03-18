@@ -4,8 +4,9 @@ const data = [1, 2, 3, 4];
 
 function App() {
   const [arr, arrSet] = React.useState<number[]>(data);
-  const drag = React.useRef(0);
-  const draggedOver = React.useRef(0);
+  const [drop, dropSet] = React.useState(-1);
+  const drag = React.useRef(-1);
+  const draggedOver = React.useRef(-1);
 
   const handleDrag = () => {
     const newArr = [...arr];
@@ -24,7 +25,18 @@ function App() {
           onDragStart={() => (drag.current = idx)}
           onDragEnter={() => (draggedOver.current = idx)}
           onDragEnd={handleDrag}
-          onDragOver={(e) => e.preventDefault()}
+          onDragOver={(e) => {
+            dropSet(idx);
+            e.preventDefault();
+          }}
+          onDragLeave={(e) => {
+            dropSet(-1);
+            e.preventDefault();
+          }}
+          onDrop={() => dropSet(-1)}
+          style={{
+            border: `1px solid ${drop === idx ? "black" : "transparent"}`,
+          }}
         >
           {a}
         </div>
